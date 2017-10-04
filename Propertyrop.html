@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <title>Property Registry</title>
+
+	<script src="http://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
+
+	<script
+
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+
+	  crossorigin="anonymous"></script>
+
+	 <script>
+
+		window.addEventListener('load', function() {
+
+		  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+
+		  if (typeof web3 !== 'undefined') {
+
+		    // Use Mist/MetaMask's provider
+
+		    web3 = new Web3(web3.currentProvider); 
+
+		  } else {
+
+		    console.log('No web3? You should consider trying MetaMask!')
+
+		    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+
+		    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+
+		  }
+
+      var abi =[{"constant":false,"inputs":[{"name":"currOwn","type":"address"},{"name":"txTo","type":"address"},{"name":"newName","type":"string"},{"name":"newContact","type":"string"},{"name":"selected","type":"uint256"},{"name":"rate","type":"string"}],"name":"transfer","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newProp","type":"uint256"},{"name":"price","type":"string"},{"name":"newAdd","type":"string"}],"name":"addPropSol","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"Gov","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"ID","type":"uint256"},{"indexed":false,"name":"price","type":"string"},{"indexed":false,"name":"propAdd","type":"string"}],"name":"AddEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"add","type":"address"},{"indexed":true,"name":"Id","type":"uint256"},{"indexed":false,"name":"price","type":"string"},{"indexed":false,"name":"name","type":"string"},{"indexed":false,"name":"contact","type":"string"}],"name":"soldEvent","type":"event"},{"anonymous":false,"inputs":[],"name":"failTxn","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"own","type":"address"},{"indexed":false,"name":"sender","type":"address"}],"name":"invalidTxn","type":"event"}];
+
+      var MyContract = web3.eth.contract(abi);
+
+      var myContractInstance = MyContract.at('0x5bd0b6d5c8ba2ffe830599939918a33bc0ea062a'); //on robsten deployed from 0x4c2661a870a7a398e2bedf5cc31d32f95eec4043 indexed string
+
+		  // Now you can start your app & access web3 freely:
+
+	
+
+		  startApp(abi,MyContract,myContractInstance);
+
+		})
+
+  </script>
+
+  </head>
+
+
+
+  <body>
+
+   <div>
+
+        <h4>
+
+			Only Government can add new property
+
+        </h4>
+
+        <div>
+
+			Property Code : <input id='propID'>
+
+        </div>
+
+        <div>
+
+			Property Price : <input id='cost'>
+
+        </div>
+
+		<div>
+
+			Property address : <input id='propAdd'>
+
+        </div>
+
+		</div>
+
+			<button onclick='addProp()'>Add new property </button>
+
+		</div>
+
+		<hr/>
+
+		<p>Events generated for the new added properties:
+
+			<h3 id='callback'></h3>
+
+		</p>
+
+        <hr/>
+
+		<h4>
+
+			Transfer property : Can be called only by if you own that property
+
+		</h4>
+
+        <div>
+
+			Buyer Address : <input id='buyer'>
+
+        </div>
+
+		        <div>
+
+			Buyer Name : <input id='parName'>
+
+        </div>
+
+		        <div>
+
+			Buyer Contact : <input id='parContact'>
+
+        </div>
+
+		<div>
+
+			Property Code : <input id='soldPropID'>
+
+        </div>
+
+        <div>
+
+			For Price : <input id='soldPrice'>
+
+        </div>
+
+        <button onclick='transferProp()'>Transfer</button>
+
+      </div>
+
+	  <hr/>
+
+		<p>Events generated for the property transfer:
+
+			<h3 id='callback1'></h3>
+
+		</p>
+
+      <hr/>
+
+      <div>
+
+	  <h4>
+
+		Find all available Properties with Government
+
+		</h4>
+
+	  </div>
+
+		<button onclick='allProp()'>All Properties</button>
+	<hr/>
+
+		<p>
+		 Below are the properties available with Government 
+
+			<h3 id='propertiesback'></h3>
+
+		</p>
+
+		<hr/>
+
+		<h4>Check Property History
+
+		</h4>
+
+		<div>
+
+			Enter Property ID
+
+			<input id='intPropID'>
+
+		</div>
+
+		<p></p>
+
+		<button onclick='propHistory()'>Go</button>
+
+		<hr/>
+
+		<p><h3 id='currentOwn'></h3>
+
+		</p>
+
+		
+
+		<hr/>
+
+		<h4> Check all sold properties
+
+		</h4>
+
+		<button onClick = 'allSoldProp()'>Go</button>
+
+		<p>
+
+		<h3 id = 'allSold'></h3>
+
+		</p>
+
+		
+
+<script type="text/javascript" src='PropertyPromise.js'> 
+
+
+
+</script>
+
+
+
+  </body>
+
+</html>
